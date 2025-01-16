@@ -5,6 +5,7 @@ const alertMessage = document.getElementById("alert-message");
 const todosBody = document.querySelector("tbody");
 const deleteAllButton = document.getElementById("delete-all-button");
 const editButton = document.getElementById("edit-button");
+const filterButtons = document.querySelectorAll(".filter-todos");
 
 // ارایه اصلی تودوز اطلاعات خود را از لوکال استوریج میگیرد
 //اگر برای بار اول اجرا میشد و لوکال استوریج خالی بود یا قرار میدهیم و یک ارایه خالی میگذاریم
@@ -36,14 +37,15 @@ const showAlert = (message, type) => {
   }, 2000);
 };
 
-const displayTodos = () => {
+const displayTodos = (data) => {
+  const todoList = data || todos;
   todosBody.innerHTML = "";
-  if (!todos.length) {
+  if (!todoList.length) {
     todosBody.innerHTML = "<tr><td colspan='4'>No task found !</td></tr>";
     return;
   }
 
-  todos.forEach((todo) => {
+  todoList.forEach((todo) => {
     todosBody.innerHTML += `
     <tr>
         <td>${todo.task}</td>
@@ -161,7 +163,29 @@ const applyEditHandler = (event) => {
   showAlert("Todo edited successfully", "success");
 };
 
-window.addEventListener("load", displayTodos());
+const filterHandler = (event) => {
+  let filteredTodos = null;
+  const filter = event.target.dataset.filter;
+  switch (filter) {
+    case "pending":
+      filteredTodos = todos.filter((todo) => todo.completed === false);
+
+      break;
+
+    case "completed":
+      filteredTodos = todos.filter((todo) => todo.completed === true);
+
+      break;
+
+    default:
+      filteredTodos = todos;
+      break;
+  }
+  displayTodos(filteredTodos)
+};
+
+window.addEventListener("load",() => displayTodos());
 addButton.addEventListener("click", addHandler);
 deleteAllButton.addEventListener("click", deleteAllHandler);
 editButton.addEventListener("click", applyEditHandler);
+filterButtons.forEach((button) => addEventListener("click", filterHandler));
