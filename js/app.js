@@ -3,7 +3,9 @@ const dateInput = document.getElementById("date-input");
 const addButton = document.getElementById("add-button");
 const alertMessage = document.getElementById("alert-message");
 
-const todos = [];
+// ارایه اصلی تودوز اطلاعات خود را از لوکال استوریج میگیرد
+//اگر برای بار اول اجرا میشد و لوکال استوریج خالی بود یا قرار میدهیم و یک ارایه خالی میگذاریم
+const todos = JSON.parse(localStorage.getItem("todos")) || [];
 
 const generateId = () => {
   return Math.round(
@@ -27,6 +29,10 @@ const showAlert = (message, type) => {
   }, 2000);
 };
 
+const saveToLocalStorage = () => {
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
+
 const addHandler = () => {
   const task = taskInput.value;
   const date = dateInput.value;
@@ -42,6 +48,7 @@ const addHandler = () => {
   if (task) {
     // بعد اضافه کردن تودو به لیست تودوز مقادیر اینپوت را خالی کن
     todos.push(todo);
+    saveToLocalStorage();
     taskInput.value = "";
     dateInput.value = "";
     console.log(todos);
