@@ -2,10 +2,15 @@ const taskInput = document.getElementById("task-input");
 const dateInput = document.getElementById("date-input");
 const addButton = document.getElementById("add-button");
 const alertMessage = document.getElementById("alert-message");
+const todosBody = document.querySelector("tbody");
 
 // ارایه اصلی تودوز اطلاعات خود را از لوکال استوریج میگیرد
 //اگر برای بار اول اجرا میشد و لوکال استوریج خالی بود یا قرار میدهیم و یک ارایه خالی میگذاریم
 const todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+const saveToLocalStorage = () => {
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
 
 const generateId = () => {
   return Math.round(
@@ -29,9 +34,30 @@ const showAlert = (message, type) => {
   }, 2000);
 };
 
-const saveToLocalStorage = () => {
-  localStorage.setItem("todos", JSON.stringify(todos));
+const displayTodos = () => {
+  todosBody.innerHTML = "";
+  if (!todos.length) {
+    todosBody.innerHTML = "<tr><td colspan='4'>No task found !</td></tr>";
+    return;
+  }
+
+  todos.forEach((todo) => {
+    todosBody.innerHTML += `
+    <tr>
+        <td>${todo.task}</td>
+        <td>${todo.date || "No Date"}</td>
+        <td>${todo.completed ? "Completed" : "Pending"}</td>
+        <td>
+        <button>Edit</button>
+        <button>Do</button>
+        <button>Delete</button>
+        </td>
+    </tr>
+    `;
+  });
 };
+
+displayTodos();
 
 const addHandler = () => {
   const task = taskInput.value;
@@ -49,9 +75,9 @@ const addHandler = () => {
     // بعد اضافه کردن تودو به لیست تودوز مقادیر اینپوت را خالی کن
     todos.push(todo);
     saveToLocalStorage();
+    displayTodos();
     taskInput.value = "";
     dateInput.value = "";
-    console.log(todos);
     showAlert("Todo added successfully", "success");
   } else {
     //استفاده از تایع بالا و وارد کردن مقادیر ورودی و تایپ پیام
