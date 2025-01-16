@@ -5,10 +5,16 @@ const alertMessage = document.getElementById("alert-message");
 
 const todos = [];
 
+const generateId = () => {
+  return Math.round(
+    Math.random() * Math.random() * Math.pow(10, 15)
+  ).toString();
+};
+
 //ورودی های تایع یکی برای وارد کردن متن پیام و یکی برای استایل دهی به رنگ پیام
 const showAlert = (message, type) => {
-    // هربار که یک پیام ایجاد میشود قبلی را پاک میکند
-    alertMessage.innerHTML = "";
+  // هربار که یک پیام ایجاد میشود قبلی را پاک میکند
+  alertMessage.innerHTML = "";
   const alert = document.createElement("p");
   alert.innerText = message;
   alert.classList.add("alert");
@@ -18,7 +24,7 @@ const showAlert = (message, type) => {
   // بعد از 2 ثانیه پیام را پاک میکند
   setTimeout(() => {
     alert.style.display = "none";
-  } , 2000);
+  }, 2000);
 };
 
 const addHandler = () => {
@@ -26,6 +32,8 @@ const addHandler = () => {
   const date = dateInput.value;
   //دومی ها مقادیری هستند که کاربر وارد کرده و ما دریافت کردیم
   const todo = {
+    //ایدی مساوی با ان تابع تولید عدد رندوم ایدی
+    id: generateId(),
     task: task,
     date: date,
     completed: false,
