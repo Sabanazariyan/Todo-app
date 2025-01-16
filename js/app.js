@@ -3,10 +3,11 @@ const dateInput = document.getElementById("date-input");
 const addButton = document.getElementById("add-button");
 const alertMessage = document.getElementById("alert-message");
 const todosBody = document.querySelector("tbody");
+const deleteAllButton = document.getElementById("delete-all-button");
 
 // ارایه اصلی تودوز اطلاعات خود را از لوکال استوریج میگیرد
 //اگر برای بار اول اجرا میشد و لوکال استوریج خالی بود یا قرار میدهیم و یک ارایه خالی میگذاریم
-const todos = JSON.parse(localStorage.getItem("todos")) || [];
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
 const saveToLocalStorage = () => {
   localStorage.setItem("todos", JSON.stringify(todos));
@@ -50,14 +51,12 @@ const displayTodos = () => {
         <td>
         <button>Edit</button>
         <button>Do</button>
-        <button>Delete</button>
+        <button onclick="deleteHandler('${todo.id}')">Delete</button>
         </td>
     </tr>
     `;
   });
 };
-
-displayTodos();
 
 const addHandler = () => {
   const task = taskInput.value;
@@ -85,4 +84,25 @@ const addHandler = () => {
   }
 };
 
+const deleteAllHandler = () => {
+  if (todos.length) {
+    todos = [];
+    saveToLocalStorage();
+    displayTodos();
+    showAlert("All todos cleard successfully", "success");
+  } else {
+    showAlert("No todos to clear", "error");
+  }
+};
+
+const deleteHandler = (id) => {
+  const newTodos = todos.filter((todo) => todo.id !== id);
+  todos = newTodos;
+  saveToLocalStorage();
+  displayTodos();
+  showAlert("Todo deleted successfully", "success");
+};
+
+window.addEventListener("load", displayTodos());
 addButton.addEventListener("click", addHandler);
+deleteAllButton.addEventListener("click", deleteAllHandler);
